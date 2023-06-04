@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+<include src="./components/headCss.html"></include>
+</head>
+<body>
+  <script src="./js/include.js"></script>
+  <include src="./components/header.html"></include>
+  <div class="container ">
+    <div class="col-12 my-3">
+      <div class="card">
+        <div class="card-header">
+          所有用户
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">用户名</th>
+                <th scope="col">电话</th>
+                <th scope="col">邮箱</th>
+                <th scope="col">最后登录</th>
+                <th scope="col">注册时间</th>
+                <th scope="col">用户类型</th>
+                <th scope="col">操作</th>
+              </tr>
+            </thead>
+            <tbody id="user_table">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="userInfoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">编辑用户</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-sm-2 col-form-label">ID</label>
+          <div class="col-sm-10">
+            <input type="email" class="form-control" id="user_id" disabled>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-sm-2 col-form-label">用户名</label>
+          <div class="col-sm-10">
+            <input type="email" class="form-control" id="user_name">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-sm-2 col-form-label">电话</label>
+          <div class="col-sm-10">
+            <input type="email" class="form-control" id="user_tel">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-sm-2 col-form-label">邮箱</label>
+          <div class="col-sm-10">
+            <input type="email" class="form-control" id="user_email">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-sm-2 col-form-label">用户类型</label>
+          <div class="col-sm-10">
+            <select class="form-control" id="user_type">
+              <option value="1">普通用户</option>
+              <option value="2">商家</option>
+              <option value="3">管理员</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="saveChange()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="./js/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+<script src="../js/allJs.js"></script>
+<script>
+    //  调用商品列表
+    function getUsersList(){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/allusers',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+        success: function (res) {
+          console.log(res);
+          var rows = []
+          $.each(res.data, function (i, item) {
+            rows.push(`<tr>
+                <th scope="row">${item.id}</th>
+                <td>${item.username}</td>
+                <td>${item.tel}</td>
+                <td>${item.email}</td>
+                <td>${item.last_login}</td>
+                <td>${item.register_at}</td>
+                <td>${item.user_type === '2' ? '商家' : item.user_type === '3' ? '管理员' : '普通用户'}</td>
+                <td><button type="button" class="btn btn-primary" onclick="getInfoById(${item.id})">修改</button><button type="button" class="btn btn-danger ml-2" onclick="deleteUser(${item.id})">删除用户</button></td>
+              </tr>`)
+          })
+          $('#user_table').empty().append(rows.join(''))
+        }
+      })
+    }
+    getUsersList()
+
+    function getInfoById(id){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/'+id,
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+        success: function (res) {
+          console.log(res);
+          $('#user_id').val(res.data.id)
+          $('#user_name').val(res.data.username)
+          $('#user_tel').val(res.data.tel)
+          $('#user_email').val(res.data.email)
+          $('#userInfoModal').modal('show')
+        }
+      })
+    }
+
+    function saveChange(){
+      $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1/my/userinfo',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          data:{
+            id:$('#user_id').val(),
+            username:$('#user_name').val(),
+            tel:$('#user_tel').val(),
+            email:$('#user_email').val(),
+            user_type:$('#user_type').val()
+          },
+        success: function (res) {
+          console.log(res);
+          Toast.fire({
+          icon: 'success',
+          title: res.message
+           })
+           $('#userInfoModal').modal('hide')
+        getUsersList()
+        }
+      })
+    }
+
+    function deleteUser(id){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/delete/'+id,
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+        success: function (res) {
+          console.log(res);
+          Toast.fire({
+        icon: 'success',
+        title: res.message
+        })
+          getUsersList()
+        }
+      })
+
+    }
+</script>
+</body>
+</html>

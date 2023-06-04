@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首页</title>
+  <include src="./components/headCss.html"></include>
+</head>
+<body>
+  <script src="./js/include.js"></script>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+    <a class="navbar-brand" href="#">校园零售交易平台</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">首页</a>
+        </li>
+        <li class="nav-item" id="userOp">
+          <a class="nav-link" href="users.html">用户</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="my.html">个人中心</a>
+        </li>
+      </ul>
+      <div class="form-inline my-2 my-lg-0">
+        <a class="btn btn-primary my-2 my-sm-0 ml-2" id="postGoodsBtn" href="post_goods.html">发布商品</a>
+      </div>
+      <div class="form-inline my-2 my-lg-0">
+        <a class="btn btn-outline-danger my-2 my-sm-0 ml-2" onclick="clearLocalStroge()">退出登录</a>
+      </div>
+    </div>
+  </div>
+  </nav>
+  <div class="container my-3">
+    <div class="row">
+      <div class="col-3">
+          <div class="card">
+            <div class="card-header">
+              <div class="media">
+              <img class="rounded-circle w-25 mt-1" src="./img/avatar.webp.jpg" alt="User Avatar">
+
+                <div class="media-body ml-3">
+                  <h5 class="widget-user-username mb-2"></h5>
+              <span class="badge badge-warning " id="user_type"></span>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <ul class="list-group border-0">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  已买
+                  <span class="badge badge-primary badge-pill" id="my_buys"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  评价
+                  <span class="badge badge-primary badge-pill" id="my_rate"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  积分
+                  <span class="badge badge-primary badge-pill" id="my_credits"></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+              <div class="card mt-3">
+            <div class="card-header">
+              商品分类
+            </div>
+            <div class="card-body p-0">
+              <div class="list-group" id="goodsCateList">
+          
+              </div>
+            </div>
+          </div>
+        
+      </div>
+      <div class="col-9">
+        <div class="d-flex mb-3">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search_content">
+          <button class="btn btn-outline-success my-2 my-sm-0 w-25" onclick="getGoodsInfoByKeyWords()">搜索</button>      
+        </div>
+        <div class="row row-cols-1 row-cols-md-4" id="goodsList">
+    
+        </div>
+      </div>
+    </div>
+  
+</div>
+<!-- Modal -->
+<div class="modal fade" id="goodsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">商品详情</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <label for="staticEmail" class="col-sm-2 col-form-label">商品编号</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="goods_id" value="">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="staticEmail" class="col-sm-2 col-form-label">商家编号</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="goods_author" value="">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="staticEmail" class="col-sm-2 col-form-label">商家名称</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="goods_author_name" value="">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="staticEmail" class="col-sm-2 col-form-label">商品名称</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="goods_name" value="">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="staticEmail" class="col-sm-2 col-form-label">价格</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="goods_price" value="">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="staticEmail" class="col-sm-2 col-form-label">简介</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="goods_content" value="">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="exampleFormControlTextarea1">评论</label>
+          <textarea class="form-control" rows="3" id="commentInfo"></textarea>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-primary" onclick="postComment()">发布评论</button>
+        </div>
+        <ul class="list-unstyled" id="goodsCommentLists">
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-warning" onclick="buyNow()">立即购买</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="goodsEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">商品编辑</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" >商品编号</span>
+            </div>
+            <input type="text" class="form-control" id="e_goods_id" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" disabled>
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" >商品名称</span>
+            </div>
+            <input type="text" class="form-control" id="e_goods_name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+          </div>
+          <div class="input-group flex-nowrap">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="addon-wrapping">价格</span>
+            </div>
+            <input type="text" class="form-control" id="e_goods_price" aria-label="Username" aria-describedby="addon-wrapping">
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">商品介绍</label>
+            <textarea class="form-control" id="e_goods_content" rows="20"></textarea>
+          </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-warning" onclick="editGoods($('#e_goods_id').val())">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="./js/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+<script src="./js/allJs.js"></script>
+<script>
+    let userType = localStorage.getItem('userType')
+    getMyInfoById()
+  //  调用商品列表
+  function getGoodsList(){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/article/list',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+        success: function (res) {
+          console.log(res);
+          var rows = []
+          $.each(res.data, function (i, item) {
+            rows.push(`<div class="col mb-4">
+            <div class="card h-100">
+            <img src="./img/cover.webp.jpg" class="card-img-top" alt="...">
+            <a href="JavaScript:;" class="badge badge-secondary rounded-0" onclick="getGoodsInfo(${item.id})">查看详情</a>
+           <div class="card-body">
+          <h6 class="card-title">${item.title}</h6>
+          <p class="card-text text-warning">￥${item.price}</p>
+           </div>
+           <div class="card-footer d-flex justify-content-between">
+            <a href="#" class="badge badge-primary ${userType === '3' ? '' : 'd-none'}" id="edit" onclick="editgetGoodsInfo(${item.id})">编辑</a>
+            <a href="#" class="badge badge-danger ${userType === '3' ? '' : 'd-none'}" id="delete" onclick="deleteGoods(${item.id})">删除</a>
+            <a href="#" class="badge badge-warning" onclick="getGoodsInfo(${item.id})">立即购买</a>
+            </div>
+          </div>
+          </div>`)
+          })
+          $('#goodsList').empty().append(rows.join(''))
+        }
+      })
+    }
+
+    //  调用商品分类列表
+    function getGoodsCateList(){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/article/cates',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+        success: function (res) {
+          console.log(res);
+          var rows = []
+          $.each(res.data, function (i, item) {
+            rows.push(`<button type="button" class="list-group-item list-group-item-action" onclick="getAtcById(${item.id})">${item.name}</button>`)
+          })
+          $('#goodsCateList').empty().append(rows.join(''))
+        }
+      })
+    }
+    //调用商品方法
+    getGoodsList()
+    //调用商品列表方法
+    getGoodsCateList()
+    getUserOrderNumInfo()
+    getUserReviewsNumInfo()
+    function getAtcById(id){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/article/catesatc/'+id,
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          success: function (res) {
+          console.log(res);
+          var rows = []
+          $.each(res.data, function (i, item) {
+            rows.push(`<div class="col mb-4">
+            <div class="card h-100">
+            <img src="./img/cover.webp.jpg" class="card-img-top" alt="...">
+            <a href="JavaScript:;" class="badge badge-secondary rounded-0" onclick="getGoodsInfo(${item.id})">查看详情</a>
+           <div class="card-body">
+          <h6 class="card-title">${item.title}</h6>
+          <p class="card-text text-warning">￥${item.price}</p>
+           </div>
+           <div class="card-footer d-flex justify-content-between">
+            
+            <a href="#" class="badge badge-primary ${userType === '3' ? '' : 'd-none'}" onclick="editgetGoodsInfo(${item.id})">编辑</a>
+            <a href="#" class="badge badge-danger ${userType === '3' ? '' : 'd-none'}" onclick="deleteGoods(${item.id})">删除</a>
+            <a href="#" class="badge badge-warning" onclick="getGoodsInfo(${item.id})">立即购买</a>
+            </div>
+          </div>
+          </div>`)
+          })
+          $('#goodsList').empty().append(rows.join(''))
+        }
+      })
+    }
+
+    function getGoodsInfo(id){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/article/'+id,
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+        success: function (res) {
+          console.log(res);
+          $('#goods_id').val(res.data.id)
+          $('#goods_author_name').val(res.data.username)
+          $('#goods_name').val(res.data.title)
+          $('#goods_author').val(res.data.author_id)
+          $('#goods_price').val(res.data.price)
+          $('#goods_content').val(res.data.content)
+          $('#goodsModal').modal('show')
+          getGoodsCommentInfo(res.data.id)
+        }
+      })
+    }
+
+    function editgetGoodsInfo(id){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/article/'+id,
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+        success: function (res) {
+          console.log(res);
+          $('#e_goods_id').val(res.data.id)
+          $('#e_goods_name').val(res.data.title)
+          $('#e_goods_price').val(res.data.price)
+          $('#e_goods_content').val(res.data.content)
+          $('#goodsEditModal').modal('show')
+        }
+      })
+    }
+
+    function editGoods(id){
+      $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1/my/article/edit',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          data:{
+            id:$('#e_goods_id').val(),
+            title:$('#e_goods_name').val(),
+            price:$('#e_goods_price').val(),
+            content:$('#e_goods_content').val(),
+          },
+        success: function (res) {
+          console.log(res);
+          Toast.fire({
+          icon: 'success',
+          title: res.message
+           })
+           $('#goodsEditModal').modal('hide')
+           //调用商品方法
+          getGoodsList()
+        }
+      })
+    }
+
+    function deleteGoods(id){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/article/delete/'+id,
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+        success: function (res) {
+          console.log(res);
+          Toast.fire({
+        icon: 'success',
+        title: res.message
+        })
+           //调用商品方法
+           getGoodsList()
+        }
+      })
+    }
+
+    function postComment(){
+      $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1/my/article/comment',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          data:{
+            product_id:$('#goods_id').val(),
+            seller_id:$('#goods_author').val(),
+            content:$('#commentInfo').val(),
+            created_at:CURRENT_TIME.fullDate,
+          },
+          success: function (res) {
+          console.log(res);
+          Toast.fire({
+          icon: 'success',
+          title: res.message
+           })
+           getGoodsCommentInfo($('#goods_id').val())
+           $('#commentInfo').val('')
+        }
+      })
+    }
+
+    function getGoodsCommentInfo(id){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/article/comment/'+id,
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          success: function (res) {
+          console.log(res);
+          var rows = []
+          $.each(res.data, function (i, item) {
+            rows.push(`<li>
+            <div class="d-flex justify-content-between">
+              <div>${item.username}</div>
+              <div>${item.created_at}</div>
+            </div>
+            <div>
+              ${item.content}
+            </div>
+          </li>`)
+          })
+          $('#goodsCommentLists').empty().append(rows.join(''))
+        }
+      })
+    }
+
+
+    function buyNow(){
+      if(parseInt($('#goods_price').val()) > parseInt($('#my_credits').text())){
+        Toast.fire({
+          icon: 'error',
+          title: '抱歉，您的余额不足！'
+           })
+      }else{
+      costNum = parseInt($('#my_credits').text()) - parseInt($('#goods_price').val())
+      $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1/my/article/orders',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          data:{
+            product_id:$('#goods_id').val(),
+            cost_price:costNum,
+            seller_id:$('#goods_author').val(),
+            total_price:$('#goods_price').val(),
+            order_time:CURRENT_TIME.fullDate,
+            payment_time:CURRENT_TIME.fullDate,
+            status:1
+          },
+          success: function (res) {
+          console.log(res);
+          Toast.fire({
+          icon: 'success',
+          title: res.message
+           })
+           $('#goodsModal').modal('hide')
+           getMyInfoById()
+        }
+      })
+    }
+    }
+</script>
+</body>
+</html>
+

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <include src="./components/headCss.html"></include>
+</head>
+<body>
+  <script src="./js/include.js"></script>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+    <a class="navbar-brand" href="#">校园零售交易平台</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">首页</a>
+        </li>
+        <li class="nav-item" id="userOp">
+          <a class="nav-link" href="users.html">用户</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="my.html">个人中心</a>
+        </li>
+      </ul>
+      <div class="form-inline my-2 my-lg-0">
+        <a class="btn btn-primary my-2 my-sm-0 ml-2" id="postGoodsBtn" href="post_goods.html">发布商品</a>
+      </div>
+      <div class="form-inline my-2 my-lg-0">
+        <a class="btn btn-outline-danger my-2 my-sm-0 ml-2" onclick="clearLocalStroge()">退出登录</a>
+      </div>
+    </div>
+  </div>
+  </nav>
+  <div class="container my-3">
+    <div class="row">
+      <div class="col-3">
+        <div class="card">
+          <div class="card-header">
+            <div class="media">
+            <img class="rounded-circle w-25 mt-1" src="./img/avatar.webp.jpg" alt="User Avatar">
+
+              <div class="media-body ml-3">
+                <h5 class="widget-user-username mb-2"></h5>
+            <span class="badge badge-warning " id="user_type"></span>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <ul class="list-group border-0">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                已买
+                <span class="badge badge-primary badge-pill" id="my_buys">14</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                评价
+                <span class="badge badge-primary badge-pill" id="my_rate">2</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                积分
+                <span class="badge badge-primary badge-pill" id="my_credits">1</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+            <div class="list-group mt-3">
+              <button type="button" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#changePwdModal">修改密码</button>
+               </div>
+      </div>
+      <div class="col-9">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+           <div>地址管理</div>
+           <div><button type="button" class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#AddAddressModal">新增地址</button></div>
+          </div>
+          <div class="card-body p-0">
+            <table class="table table-hover" >
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">收货人姓名</th>
+                  <th scope="col">收货人电话</th>
+                  <th scope="col">收货人地址</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody id="user_address">
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-header">
+            我的订单
+          </div>
+          <div class="card-body p-0">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">商品名称</th>
+                  <th scope="col">价格</th>
+                  <th scope="col">购买时间</th>
+                  <th scope="col">订单状态</th>
+                  <th scope="col">操作</th>
+                </tr>
+              </thead>
+              <tbody id="userOrderInfo">
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 修改密码弹窗 -->
+<div class="modal fade" id="changePwdModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">修改密码</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">旧密码</span>
+          </div>
+          <input type="text" class="form-control" placeholder="" id="oldPwd" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">新密码</span>
+          </div>
+          <input type="text" class="form-control" placeholder="" id="newPwd" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="changeMyPwd()">立即修改</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- 新增地址弹窗 -->
+<div class="modal fade" id="AddAddressModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">新增地址</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">收货人姓名</span>
+          </div>
+          <input type="text" class="form-control" id="add_name"  aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">收货人电话</span>
+          </div>
+          <input type="text" class="form-control" id="add_tel" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">收货人地址</span>
+          </div>
+          <input type="text" class="form-control" id="add_address" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="AddAddressById()">新增</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="./js/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/sweetalert2/11.7.3/sweetalert2.min.js"></script>
+<script src="../js/allJs.js"></script>
+  <script>
+    getMyInfoById()
+    getUserOrderNumInfo()
+    getUserReviewsNumInfo()
+    // 获取用户地址信息
+    function getUserAddress(id){
+      
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/article/address/'+id,
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          success: function (res) {
+          console.log(res);
+          var rows = []
+          $.each(res.data, function (i, item) {
+            rows.push(`<tr>
+                <th scope="row">${item.id}</th>
+                <td>${item.recipient}</td>
+                <td>${item.phone_number}</td>
+                <td>${item.address_line1}</td>
+                <td><button type="button" class="btn btn-danger btn-sm ml-2" onclick="deleteAddress(${item.id})">删除地址</button></td>
+                
+              </tr>`)
+          })
+          $('#user_address').empty().append(rows.join(''))
+        }
+      })
+    }
+
+    getUserAddress()
+    getUserOrderInfo()
+    // 获取用户订单
+    function getUserOrderInfo(){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/userorderinfo',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          success: function (res) {
+          console.log(res);
+          var rows = []
+          $.each(res.data, function (i, item) {
+            rows.push(`<tr>
+                <th scope="row">${item.oid}</th>
+                <td>${item.title}</td>
+                <td>${item.total_price}</td>
+                <td>${item.order_time}</td>
+                <td>${item.status === '1' ? '<span class="badge badge-pill badge-warning">待发货</span>' : item.status === '2' ? '<span class="badge badge-pill badge-info">待收货</span>' : '<span class="badge badge-pill badge-success">已完成</span>'}</td>
+                <td><button type="button" class="btn btn-danger btn-sm ml-2" onclick="deleteOrderInfo(${item.oid})">删除订单</button><button type="button" class="btn btn-warning btn-sm ml-2 ${localStorage.getItem('userType') !== '2' ? 'd-none':''}" onclick="changeOrdersStatus(${item.oid})">立即发货</button><button type="button" class="btn btn-success btn-sm ml-2  ${localStorage.getItem('userType') !== '1' ? 'd-none':''}" onclick="changeOrdersStatus2(${item.oid})" ${item.status === '0' ? 'disabled':''}>确认收货</button></td>
+              </tr>`)
+          })
+          $('#userOrderInfo').empty().append(rows.join(''))
+        }
+      })
+    }
+
+    
+    // 添加用户地址
+    function AddAddressById(){
+    if ($('#add_name').val() === '') {
+  Toast.fire({
+          icon: 'error',
+          title: '请输入收货人姓名！'
+           })
+      }else if($('#add_tel').val()  === ''){
+        Toast.fire({
+          icon: 'error',
+          title: '请输入收货人电话！'
+           })
+      }else if($('#add_address').val() === ''){
+        Toast.fire({
+          icon: 'error',
+          title: '请输入收货人地址！'
+           })
+      }else{
+      $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1/my/article/address',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          data:{
+            recipient:$('#add_name').val(),
+            phone_number:$('#add_tel').val(),
+            address_line1:$('#add_address').val()
+          },
+        success: function (res) {
+          console.log(res);
+          Toast.fire({
+          icon: 'success',
+          title: res.message
+           })
+           $('#AddAddressModal').modal('hide')
+           getUserAddress()
+        }
+      })
+    }
+    }
+    // 删除地址
+    function deleteAddress(id){
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1/my/article/deleteaddr/'+id,
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+        success: function (res) {
+          console.log(res);
+          Toast.fire({
+        icon: 'success',
+        title: res.message
+        })
+        getUserAddress()
+        }
+      })
+    }
+    // 改变订单状态
+    function changeOrdersStatus(id){
+      $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1/my/updateorders',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          data:{
+            oid:id
+          },
+        success: function (res) {
+          console.log(res);
+          Toast.fire({
+          icon: 'success',
+          title: res.message
+           })
+           getUserOrderInfo()
+        }
+      })
+    }
+    // 改变订单状态2
+    function changeOrdersStatus2(id){
+      $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1/my/updateorders2',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          data:{
+            oid:id
+          },
+        success: function (res) {
+          console.log(res);
+          Toast.fire({
+          icon: 'success',
+          title: res.message
+           })
+           getUserOrderInfo()
+        }
+      })
+    }
+    // 修改密码
+    function changeMyPwd(){
+      $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1/my/updatepwd',
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("Authorization", localStorage.getItem('token'));
+          },
+          data:{
+            oldPwd:$('#oldPwd').val(),
+            newPwd:$('#newPwd').val()
+          },
+        success: function (res) {
+          console.log(res);
+          Toast.fire({
+          icon: 'success',
+          title: res.message
+           })
+           $('#changePwdModal').modal('hide')
+           $('#oldPwd').val('')
+           $('#newPwd').val('')
+        }
+      })
+    }
+  </script>
+</body>
+</html>
